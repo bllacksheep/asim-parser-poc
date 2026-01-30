@@ -37,7 +37,7 @@ func main() {
 	if len(os.Args) < 2 {
 		log.Fatal("Pass file name as arg")
 	}
-	
+
 	file := os.Args[1]
 
 	parser := tree_sitter.NewParser()
