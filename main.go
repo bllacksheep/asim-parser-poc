@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-func readFile(file string) ([]byte, error) {
+func sourceFile(file string) ([]byte, error) {
 	var data []byte
 	buf := make([]byte, 512)
 	f, err := os.Open(file)
@@ -34,14 +34,19 @@ func readFile(file string) ([]byte, error) {
 }
 
 func main() {
+	if len(os.Args) < 2 {
+		log.Fatal("Pass file name as arg")
+	}
+	
+	file := os.Args[1]
+
 	parser := tree_sitter.NewParser()
 	defer parser.Close()
 	parser.SetLanguage(tree_sitter.NewLanguage(tree_sitter_xml.LanguageXML()))
 
-	data, err := readFile("example.xml")
-
+	data, err := sourceFile(file)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	tree := parser.Parse(data, nil)
