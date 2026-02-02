@@ -1,3 +1,6 @@
+dev:
+	mkdir -p bin/ build/
+
 build:
 	go build main.go -o bin/
 
