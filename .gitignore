@@ -1,3 +1,4 @@
 bin/asim-parser-poc
 bin/sandbox
 bin/parser
+build/
