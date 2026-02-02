@@ -8,4 +8,4 @@ debug:
 	go build -work -gcflags="all=-N -l" -ldflags="-w=false" -o bin/cgo_sandbox main.go 
 
 c:
-	gcc parser.c `pkg-config --libs --cflags libxml-2.0` -o bin/parser
+	gcc src/parser.c `pkg-config --libs --cflags libxml-2.0` -o bin/parser
