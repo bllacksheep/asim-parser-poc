@@ -1,11 +1,6 @@
 #include <libxml/xmlschemastypes.h>
 #include <libxml/parser.h>
-
-
-
-
-
-
+#include "api/xsd.h"
 
 int main(int argC, char** argV)
 {

@@ -8,6 +8,12 @@ import (
 	"io"
 	"log"
 	"os"
+
+	/*
+	#cgo CFLAGS: -Iapi/
+	#include "xsd.h"
+	*/
+	"C"
 )
 
 func sourceFile(file string) ([]byte, error) {
