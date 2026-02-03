@@ -8,20 +8,34 @@
 
 #define MAX_BUF 8 * 1024
 
-size_t getdata(char *buf, const char *path) {
+static size_t getdata(char *buf, const char *path) {
     if (buf == NULL || path == NULL) {
         perror("error no buf or path");
         exit(EXIT_FAILURE);
     }
+
+    FILE *fp = fopen(path, "rb");
+    if (fp == NULL) {
+        perror("error failed to open file");
+        exit(EXIT_FAILURE);
+    }
+
     size_t n;
-    FILE *fp = fopen(path, "r");
     n = fread(buf, 1, MAX_BUF, fp);
+
+    if (ferror(fp)) {
+        perror("error reading data");
+        if (fclose(fp) == EOF)
+            perror("error closing file");
+        exit(EXIT_FAILURE);
+    }
+
     if (fclose(fp) == EOF)
         perror("error closing file");
     return n;
 }
 
-int main(int argc, char *argv[])
+void x()
 {
 	int ret;
     size_t xmlbuf_n, xsdbuf_n;
@@ -75,7 +89,9 @@ int main(int argc, char *argv[])
 	xmlSchemaCleanupTypes();
 	xmlCleanupParser();
 	xmlMemoryDump();
-
-	return 0;
 }
 
+int main(int argc, char *argv[]) {
+   x();
+   return 0;
+}
