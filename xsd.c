@@ -8,7 +8,9 @@
 
 #define MAX_BUF 8 * 1024
 
-static size_t getdata(char *buf, const char *path) {
+// provide a buf of MAX_BUF size
+// provide a valid file path
+static size_t read_file_to_buf(char *buf, const char *path) {
     if (buf == NULL || path == NULL) {
         perror("error no buf or path");
         exit(EXIT_FAILURE);
@@ -44,10 +46,10 @@ void x()
     char xmlbuf[MAX_BUF];
     char xsdbuf[MAX_BUF];
 
-    xsdbuf_n = getdata(xsdbuf, "stubs/test.xsd");
+    xsdbuf_n = read_file_to_buf(xsdbuf, "stubs/test.xsd");
 	ctxt = xmlSchemaNewMemParserCtxt(xsdbuf, xsdbuf_n);
 
-    xmlbuf_n = getdata(xmlbuf, "stubs/test.xml");
+    xmlbuf_n = read_file_to_buf(xmlbuf, "stubs/test.xml");
 
 	xmlLineNumbersDefault(1);
 
