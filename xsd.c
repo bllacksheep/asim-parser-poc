@@ -26,7 +26,7 @@ static size_t read_file_to_buf(char *buf, const char *path) {
 
     if (ferror(fp)) {
         perror("error reading data");
-        fclose(fp)
+        fclose(fp);
         exit(EXIT_FAILURE);
     }
 
