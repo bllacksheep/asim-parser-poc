@@ -20,13 +20,11 @@ static size_t getdata(char *buf, const char *path) {
         exit(EXIT_FAILURE);
     }
 
-    size_t n;
-    n = fread(buf, 1, MAX_BUF, fp);
+    size_t n = fread(buf, 1, MAX_BUF, fp);
 
     if (ferror(fp)) {
         perror("error reading data");
-        if (fclose(fp) == EOF)
-            perror("error closing file");
+        fclose(fp)
         exit(EXIT_FAILURE);
     }
 
