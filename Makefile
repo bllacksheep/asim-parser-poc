@@ -1,16 +1,13 @@
-dev:
+d:
 	mkdir -p bin/ build/
 
-build:
+b:
 	go build -o bin/asim-parser-poc main.go
 
-rungo:
+g:
 	go run main.go stubs/example.xml
 
-runc:
-	bin/validator stubs/test.xml stubs/test.xsd
-
-debug:
+dbg:
 	go build -work -gcflags="all=-N -l" -ldflags="-w=false" -o bin/cgo_sandbox main.go 
 
 c:
