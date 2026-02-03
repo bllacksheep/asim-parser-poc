@@ -16,5 +16,9 @@ debug:
 c:
 	gcc xsd.c -g -O0 `pkg-config --libs --cflags libxml-2.0` -o bin/validator
 
+v:
+	bin/validator
+
 clean:
 	rm -rf bin/* build/*
+
