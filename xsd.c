@@ -1,34 +1,46 @@
 #include <libxml/xmlschemastypes.h>
 #include <libxml/parser.h>
+#include <string.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
 #include "api/xsd.h"
 
-int main(int argC, char** argV)
+#define MAX_BUF 8 * 1024
+
+// ensure your own buffers not NULL
+// check your own data after read
+void getdata(char *buf, const char *path) {
+    FILE *fp = fopen(path, "r");
+    fread(buf, 1, MAX_BUF, fp);
+    if (fclose(fp) == EOF)
+        perror("error closing file");
+}
+
+int main(int argc, char *argv[])
 {
-	if (argC <= 2) {
-		printf("Usage: %s <XML Document Name> <XSD Document Name>\n", argV[0]);
-		return 0;
-	}
-	
+	int ret;
 	xmlDocPtr doc;
 	xmlSchemaPtr schema = NULL;
 	xmlSchemaParserCtxtPtr ctxt;
-	char *XMLFileName = argV[1];
-	char *XSDFileName = argV[2];
-	int ret;
+
+    char xmlbuf[MAX_BUF];
+    char xsdbuf[MAX_BUF];
+    getdata(xsdbuf, "stubs/test.xsd");
+    getdata(xmlbuf, "stubs/test.xml");
 
 	xmlLineNumbersDefault(1);
 
-	ctxt = xmlSchemaNewParserCtxt(XSDFileName);
+	ctxt = xmlSchemaNewMemParserCtxt(xsdbuf, strlen(xsdbuf));
 
 	xmlSchemaSetParserErrors(ctxt, (xmlSchemaValidityErrorFunc) fprintf, (xmlSchemaValidityWarningFunc) fprintf, stderr);
 	schema = xmlSchemaParse(ctxt);
-	xmlSchemaFreeParserCtxt(ctxt);
+    xmlSchemaFreeParserCtxt(ctxt);
 
-
-	doc = xmlReadFile(XMLFileName, NULL, 0);
+	doc = xmlReadMemory(xmlbuf, strlen(xmlbuf), NULL, NULL, 0);
 
 	if (doc == NULL){
-		fprintf(stderr, "Could not parse %s\n", XMLFileName);
+		fprintf(stderr, "Could not parse file\n");
 	}
 	else{
 		xmlSchemaValidCtxtPtr ctxt;
@@ -38,13 +50,13 @@ int main(int argC, char** argV)
 		ret = xmlSchemaValidateDoc(ctxt, doc);
 		
 		if (ret == 0){
-			printf("%s validates\n", XMLFileName);
+			printf("validates!\n");
 		}
 		else if (ret > 0){
-			printf("%s fails to validate\n", XMLFileName);
+			printf("no validate fails to validate\n");
 		}
 		else{
-			printf("%s validation generated an internal error\n", XMLFileName);
+			printf("validation generated an internal error\n");
 		}
 		xmlSchemaFreeValidCtxt(ctxt);
 		xmlFreeDoc(doc);
