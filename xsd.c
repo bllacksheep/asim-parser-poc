@@ -8,43 +8,11 @@
 
 #define MAX_BUF 8 * 1024
 
-const char xsdx[] = {
-	#embed "stubs/test.xsd"
-	,"\0"
-};
-
-const char *xsd =
-"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-"<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n"
-"<xs:element name=\"shiporder\">\n"
-"  <xs:complexType>\n"
-"    <xs:sequence>\n"
-"      <xs:element name=\"orderperson\" type=\"xs:string\"/>\n"
-"      <xs:element name=\"shipto\">\n"
-"        <xs:complexType>\n"
-"          <xs:sequence>\n"
-"            <xs:element name=\"name\" type=\"xs:string\"/>\n"
-"            <xs:element name=\"address\" type=\"xs:string\"/>\n"
-"            <xs:element name=\"city\" type=\"xs:string\"/>\n"
-"            <xs:element name=\"country\" type=\"xs:string\"/>\n"
-"          </xs:sequence>\n"
-"        </xs:complexType>\n"
-"      </xs:element>\n"
-"      <xs:element name=\"item\" maxOccurs=\"unbounded\">\n"
-"        <xs:complexType>\n"
-"          <xs:sequence>\n"
-"            <xs:element name=\"title\" type=\"xs:string\"/>\n"
-"            <xs:element name=\"note\" type=\"xs:string\" minOccurs=\"0\"/>\n"
-"            <xs:element name=\"quantity\" type=\"xs:positiveInteger\"/>\n"
-"            <xs:element name=\"price\" type=\"xs:decimal\"/>\n"
-"          </xs:sequence>\n"
-"        </xs:complexType>\n"
-"      </xs:element>\n"
-"    </xs:sequence>\n"
-"    <xs:attribute name=\"orderid\" type=\"xs:string\" use=\"required\"/>\n"
-"  </xs:complexType>\n"
-"</xs:element>\n"
-"</xs:schema>\n";
+static char *get_xsd_schema() {
+	char *s = malloc(stubs_test_xsd_len);
+	memcpy(s, stubs_test_xsd, stubs_test_xsd_len);
+	return s;
+}
 
 // provide a buf of MAX_BUF size
 // provide a valid file path
@@ -86,7 +54,7 @@ void x()
 
     xsdbuf_n = read_file_to_buf(xsdbuf, "stubs/test.xsd");
 	// experiment direct from bytes
-	ctxt = xmlSchemaNewMemParserCtxt(xsd, strlen(xsd));
+	ctxt = xmlSchemaNewMemParserCtxt(get_xsd_schema(), stubs_test_xsd_len);
 
     xmlbuf_n = read_file_to_buf(xmlbuf, "stubs/test.xml");
 
