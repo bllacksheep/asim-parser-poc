@@ -5,3 +5,5 @@ bin/sandbox
 bin/parser
 build/
 scratch/
+.cache/
+compile_commands.json
