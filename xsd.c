@@ -1,4 +1,5 @@
 #include "api/xsd.h"
+// #include "api/schema.h"
 #include <libxml/parser.h>
 #include <libxml/xmlschemastypes.h>
 #include <stdio.h>
@@ -6,11 +7,20 @@
 #include <string.h>
 
 #define MAX_BUF 8 * 1024
+static char *xsd_get_schema(void);
+static void xsd_validate_schema(const char *, const char *);
+static void *xsd_destroy_schema(char *s);
+static size_t read_file_to_buf(char *, const char *);
 
-static char *get_xsd_schema() {
+static char *xsd_get_schema() {
   char *s = malloc(stubs_test_xsd_len);
   memcpy(s, stubs_test_xsd, stubs_test_xsd_len);
   return s;
+}
+
+static void *destroy_xsd_schema(char *s) {
+  if (s != NULL)
+    free(s);
 }
 
 // provide a buf of MAX_BUF size
@@ -40,9 +50,9 @@ static size_t read_file_to_buf(char *buf, const char *path) {
   return n;
 }
 
-void x() {
+void xsd_validate_schema(const char *xml_path, const char *xsd_schema) {
   int ret;
-  size_t xmlbuf_n, xsdbuf_n;
+  size_t xmlbuf_len;
   xmlDocPtr doc;
   xmlSchemaPtr schema = NULL;
   xmlSchemaParserCtxtPtr ctxt;
@@ -50,11 +60,11 @@ void x() {
   char xmlbuf[MAX_BUF];
   char xsdbuf[MAX_BUF];
 
-  xsdbuf_n = read_file_to_buf(xsdbuf, "stubs/test.xsd");
-  // experiment direct from bytes
-  ctxt = xmlSchemaNewMemParserCtxt(get_xsd_schema(), stubs_test_xsd_len);
+  // xsdbuf_n = read_file_to_buf(xsdbuf, xml_path);
+  //  experiment direct from bytes
+  ctxt = xmlSchemaNewMemParserCtxt(xsd_schema, stubs_test_xsd_len);
 
-  xmlbuf_n = read_file_to_buf(xmlbuf, "stubs/test.xml");
+  xmlbuf_len = read_file_to_buf(xmlbuf, xml_path);
 
   xmlLineNumbersDefault(1);
 
@@ -63,7 +73,7 @@ void x() {
   schema = xmlSchemaParse(ctxt);
   xmlSchemaFreeParserCtxt(ctxt);
 
-  doc = xmlReadMemory(xmlbuf, xmlbuf_n, NULL, NULL, 0);
+  doc = xmlReadMemory(xmlbuf, xmlbuf_len, NULL, NULL, 0);
 
   if (doc == NULL) {
     fprintf(stderr, "Could not parse file\n");
@@ -73,6 +83,7 @@ void x() {
     ctxt = xmlSchemaNewValidCtxt(schema);
     xmlSchemaSetValidErrors(ctxt, (xmlSchemaValidityErrorFunc)fprintf,
                             (xmlSchemaValidityWarningFunc)fprintf, stderr);
+
     ret = xmlSchemaValidateDoc(ctxt, doc);
 
     if (ret == 0) {
@@ -95,6 +106,15 @@ void x() {
 }
 
 int main(int argc, char *argv[]) {
-  x();
+
+  if (argc < 2) {
+    printf("usage: command <path>\n");
+    exit(1);
+  }
+
+  char *schema = xsd_get_schema();
+  xsd_validate_schema(argv[1], schema);
+  destroy_xsd_schema(schema);
+
   return 0;
 }
