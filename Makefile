@@ -11,7 +11,7 @@ dbg:
 	go build -work -gcflags="all=-N -l" -ldflags="-w=false" -o bin/cgo_sandbox main.go 
 
 c:
-	xxd -i stubs/test.xsd > api/xsd.h && \
+	xxd -i stubs/test.xsd > api/schema.h && \
 	gcc xsd.c -g -O0 `pkg-config --libs --cflags libxml-2.0` -o bin/validator
 
 v:
