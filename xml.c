@@ -62,14 +62,9 @@ static int read_file_to_buf(char *buf, const char *path, size_t *len) {
   return EXIT_SUCCESS;
 }
 
-int main(int argc, char *argv[]) {
-
-  if (argc < 2) {
-    printf("usage: <cmd> <path_to_xml>\n");
-    exit(EXIT_FAILURE);
-  }
-
-  xml_t xml = xml_read_xml(argv[1]);
+// public api helper encapsulate workflow
+int xml_run_workflow(char *path) {
+  xml_t xml = xml_read_xml(path);
 
   if (xml == NULL) {
     perror("could not parse file\n");
@@ -88,6 +83,15 @@ int main(int argc, char *argv[]) {
   xsd_destroy_schema(schema);
   xml_destroy_xml(xml);
   teardown();
-
   return EXIT_SUCCESS;
+}
+
+int main(int argc, char *argv[]) {
+
+  if (argc < 2) {
+    printf("usage: <cmd> <path_to_xml>\n");
+    exit(EXIT_FAILURE);
+  }
+
+  return xml_run_workflow(argv[1]);
 }
