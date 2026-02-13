@@ -24,9 +24,6 @@ xml_t xml_read_xml(const char *xml_path_to_file) {
 
   doc = (xml_t)xmlReadMemory(xmlbuf, xmlbuf_len, NULL, NULL, 0);
 
-  if (doc == NULL)
-    fprintf(stderr, "Could not parse file\n");
-
   return doc;
 }
 
@@ -73,7 +70,19 @@ int main(int argc, char *argv[]) {
   }
 
   xml_t xml = xml_read_xml(argv[1]);
+
+  if (xml == NULL) {
+    perror("could not parse file\n");
+    return EXIT_FAILURE;
+  }
+
   schema_t schema = xsd_get_schema();
+
+  if (schema == NULL) {
+    perror("could allocate schema\n");
+    return EXIT_FAILURE;
+  }
+
   xsd_validate_xml(xml, schema);
 
   xsd_destroy_schema(schema);
