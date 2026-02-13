@@ -14,7 +14,7 @@ char *xsd_get_schema() {
   return s;
 }
 
-void *destroy_xsd_schema(char *s) {
+void *xsd_destroy_schema(char *s) {
   if (s != NULL)
     free(s);
 }
