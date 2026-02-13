@@ -29,21 +29,21 @@ static size_t read_file_to_buf(char *buf, const char *path) {
     exit(EXIT_FAILURE);
   }
 
-  FILE *fp = fopen(path, "rb");
-  if (fp == NULL) {
+  FILE *f = fopen(path, "rb");
+  if (f == NULL) {
     perror("error failed to open file");
     exit(EXIT_FAILURE);
   }
 
-  size_t n = fread(buf, 1, MAX_BUF, fp);
+  size_t n = fread(buf, 1, MAX_BUF, f);
 
-  if (ferror(fp)) {
+  if (ferror(f)) {
     perror("error reading data");
-    fclose(fp);
+    fclose(f);
     exit(EXIT_FAILURE);
   }
 
-  if (fclose(fp) == EOF)
+  if (fclose(f) == EOF)
     perror("error closing file");
   return n;
 }
