@@ -46,7 +46,7 @@ static size_t read_file_to_buf(char *buf, const char *path) {
   return n;
 }
 
-void xsd_validate_schema(const char *xml_path, const schema_t xsd_schema) {
+void xsd_validate_xml(const char *xml_path, const schema_t xsd_schema) {
   int ret;
   size_t xmlbuf_len;
   xmlDocPtr doc;

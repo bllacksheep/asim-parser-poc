@@ -32,7 +32,7 @@ api/schema.h: stubs/test.xsd
 	xxd -i stubs/test.xsd > api/schema.h
 
 v:
-	bin/validator
+	bin/validator stubs/test.xml
 
 clean:
 	rm -rf bin/* build/*

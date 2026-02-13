@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
   }
 
   schema_t schema = xsd_get_schema();
-  xsd_validate_schema(argv[1], schema);
+  xsd_validate_xml(argv[1], schema);
   xsd_destroy_schema(schema);
 
   return 0;
