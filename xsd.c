@@ -8,15 +8,17 @@
 
 static size_t read_file_to_buf(char *, const char *);
 
-char *xsd_get_schema() {
+// public api get the schema object that's built into the binary
+schema_t xsd_get_schema() {
   char *s = malloc(stubs_test_xsd_len);
   memcpy(s, stubs_test_xsd, stubs_test_xsd_len);
   return s;
 }
 
-void *xsd_destroy_schema(char *s) {
+// pubic api destroy allocated schema after use
+void xsd_destroy_schema(schema_t s) {
   if (s != NULL)
-    free(s);
+    free((void *)s);
 }
 
 // provide a buf of MAX_BUF size
