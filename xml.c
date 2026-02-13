@@ -9,25 +9,24 @@ static void teardown(void);
 // public api be more explicit about ownership
 void xml_destroy_xml(xml_t xml) {
   if (xml != NULL)
-    xmlFreeDoc((xmlDocPtr)xml);
+    xmlFreeDoc(xml);
 }
 
 // public api xmlDocPtr owned, must be freed with x;
 xml_t xml_read_xml(const char *xml_path_to_file) {
   char xmlbuf[MAX_BUF] = {};
   size_t xmlbuf_len;
-  xmlDocPtr doc;
 
   if (read_file_to_buf(xmlbuf, xml_path_to_file, &xmlbuf_len) != 0) {
     exit(EXIT_FAILURE);
   }
 
-  doc = (xml_t)xmlReadMemory(xmlbuf, xmlbuf_len, NULL, NULL, 0);
+  xml_t doc = xmlReadMemory(xmlbuf, xmlbuf_len, NULL, NULL, 0);
 
   return doc;
 }
 
-void teardown() {
+static void teardown() {
   xmlSchemaCleanupTypes();
   xmlCleanupParser();
   xmlMemoryDump();
