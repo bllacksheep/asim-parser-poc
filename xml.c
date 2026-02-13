@@ -68,8 +68,8 @@ static int read_file_to_buf(char *buf, const char *path, size_t *len) {
 int main(int argc, char *argv[]) {
 
   if (argc < 2) {
-    printf("usage: command <path>\n");
-    exit(1);
+    printf("usage: <cmd> <path_to_xml>\n");
+    exit(EXIT_FAILURE);
   }
 
   xml_t xml = xml_read_xml(argv[1]);
@@ -80,5 +80,5 @@ int main(int argc, char *argv[]) {
   xml_destroy_xml(xml);
   teardown();
 
-  return 0;
+  return EXIT_SUCCESS;
 }

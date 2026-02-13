@@ -6,7 +6,7 @@
 
 #define MAX_BUF 8 * 1024
 
-typedef const char *schema_t;
+typedef const char *const schema_t;
 
 schema_t xsd_get_schema(void);
 void xsd_validate_xml(xml_t, schema_t);

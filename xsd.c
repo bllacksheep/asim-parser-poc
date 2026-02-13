@@ -13,13 +13,13 @@ schema_t xsd_get_schema() {
   return s;
 }
 
-// pubic api destroy allocated schema after use
+// pubic api ownership destroy allocated schema after use
 void xsd_destroy_schema(schema_t s) {
   if (s != NULL)
     free((void *)s);
 }
 
-// void xsd_validate_xml(xmlDocPtr xml, schema_t xsd_schema) {
+// public api validate an xml blob against a schema
 void xsd_validate_xml(xml_t xml, schema_t xsd_schema) {
   int ret;
   xmlSchemaPtr schema = NULL;

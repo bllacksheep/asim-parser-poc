@@ -1,6 +1,8 @@
 #ifndef XML_H
 #define XML_H 1
 #include <libxml/xmlschemastypes.h>
+
+// desugared xmlDocPtr already const
 typedef const xmlDocPtr xml_t;
 
 xml_t xml_read_xml(const char *);
