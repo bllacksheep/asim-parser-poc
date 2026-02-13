@@ -15,15 +15,13 @@ void xml_destroy_xml(xml_t xml) {
 // public api xmlDocPtr owned, must be freed with x;
 xml_t xml_read_xml(const char *xml_path_to_file) {
   char xmlbuf[MAX_BUF] = {};
-  size_t xmlbuf_len;
+  size_t n;
 
-  if (read_file_to_buf(xmlbuf, xml_path_to_file, &xmlbuf_len) != 0) {
+  if (read_file_to_buf(xmlbuf, xml_path_to_file, &n) != 0) {
     exit(EXIT_FAILURE);
   }
 
-  xml_t doc = xmlReadMemory(xmlbuf, xmlbuf_len, NULL, NULL, 0);
-
-  return doc;
+  return xmlReadMemory(xmlbuf, n, NULL, NULL, 0);
 }
 
 static void teardown() {
