@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static size_t read_file_to_buf(char *, const char *);
+static int read_file_to_buf(char *, const char *, size_t *);
 
 // public api get the schema object that's built into the binary
 schema_t xsd_get_schema() {
@@ -23,16 +23,16 @@ void xsd_destroy_schema(schema_t s) {
 
 // provide a buf of MAX_BUF size
 // provide a valid file path
-static size_t read_file_to_buf(char *buf, const char *path) {
+static int read_file_to_buf(char *buf, const char *path, size_t *len) {
   if (buf == NULL || path == NULL) {
     perror("error no buf or path");
-    exit(EXIT_FAILURE);
+    return -1;
   }
 
   FILE *f = fopen(path, "rb");
   if (f == NULL) {
     perror("error failed to open file");
-    exit(EXIT_FAILURE);
+    return -1;
   }
 
   size_t n = fread(buf, 1, MAX_BUF, f);
@@ -40,27 +40,30 @@ static size_t read_file_to_buf(char *buf, const char *path) {
   if (ferror(f)) {
     perror("error reading data");
     fclose(f);
-    exit(EXIT_FAILURE);
+    return -1;
   }
 
-  if (fclose(f) == EOF)
+  if (fclose(f) == EOF) {
     perror("error closing file");
-  return n;
+  }
+  *len = n;
+  return 0;
 }
 
 void xsd_validate_xml(const char *xml_path, schema_t xsd_schema) {
   int ret;
-  size_t xmlbuf_len;
   xmlDocPtr doc;
   xmlSchemaPtr schema = NULL;
   xmlSchemaParserCtxtPtr ctxt;
 
-  char xmlbuf[MAX_BUF];
-  char xsdbuf[MAX_BUF];
+  char xmlbuf[MAX_BUF] = {};
+  size_t xmlbuf_len;
+
+  if (read_file_to_buf(xmlbuf, xml_path, &xmlbuf_len) != 0) {
+    exit(EXIT_FAILURE);
+  }
 
   ctxt = xmlSchemaNewMemParserCtxt(xsd_schema, stubs_test_xsd_len);
-
-  xmlbuf_len = read_file_to_buf(xmlbuf, xml_path);
 
   xmlLineNumbersDefault(1);
 
