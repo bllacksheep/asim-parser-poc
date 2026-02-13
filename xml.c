@@ -32,13 +32,13 @@ static void teardown() {
 
 // provide a buf of MAX_BUF size
 // provide a valid file path
-static int read_file_to_buf(char *buf, const char *path, size_t *len) {
-  if (buf == NULL || path == NULL) {
+static int read_file_to_buf(char *buf, const char *xmlfullpath, size_t *len) {
+  if (buf == NULL || xmlfullpath == NULL) {
     perror("error no buf or path");
     return EXIT_FAILURE;
   }
 
-  FILE *f = fopen(path, "rb");
+  FILE *f = fopen(xmlfullpath, "rb");
   if (f == NULL) {
     perror("error failed to open file");
     return EXIT_FAILURE;
@@ -60,8 +60,8 @@ static int read_file_to_buf(char *buf, const char *path, size_t *len) {
 }
 
 // public api helper encapsulate workflow
-int xml_run_workflow(char *path) {
-  xml_t xml = xml_read_xml(path);
+int xml_run_workflow(char *xmlpath) {
+  xml_t xml = xml_read_xml(xmlpath);
 
   if (xml == NULL) {
     perror("could not parse file\n");
